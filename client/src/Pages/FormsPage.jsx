@@ -19,8 +19,8 @@ const FormsPage = () => {
   }, []);
 
   const handleViewForm = (form) => {
-    navigate(`/form/${form._id}`, {state: { form }});
-  }
+    navigate(`/form/${form._id}`, { state: { form } });
+  };
 
   const copyLink = (formId) => {
     const link = `${window.location.origin}/form/${formId}`;
@@ -44,7 +44,7 @@ const FormsPage = () => {
           <div
             key={form._id}
             className="bg-white p-5 rounded-2xl shadow-md hover:shadow-2xl transition-transform transform hover:scale-[1.03] cursor-pointer border border-purple-100 hover:border-purple-300"
-            onClick={() => navigate(`/form/${form._id}`)}
+            onClick={() => handleViewForm(form)}
           >
             <h3 className="text-3xl font-bold text-purple-900 mb-3 tracking-tight">
               {form.title}
@@ -63,9 +63,11 @@ const FormsPage = () => {
             <div className="flex justify-between items-center gap-4">
               <button
                 className="flex-1 bg-gradient-to-r from-purple-600 to-purple-500 text-white py-2 px-4 rounded-lg font-medium shadow-md hover:from-purple-700 hover:to-purple-600 transition"
-                onClick={() => handleViewForm(form)}
-              >
-                View Form
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/form/${form._id}/responses`)
+                }}>
+                View Responses
               </button>
 
               <button

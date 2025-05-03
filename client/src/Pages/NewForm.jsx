@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const fieldTypes = [
   { label: "Short Answer", value: "text" },
@@ -11,6 +12,7 @@ const NewForm = () => {
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [fields, setFields] = useState([]);
+  const navigate = useNavigate();
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -48,8 +50,6 @@ const NewForm = () => {
         return alert("Options must be non-empty for radio/checkbox fields.");
       }
     }
-    alert("Form validated successfully!");
-    // Submit logic here
   };
 
   const renderField = (field) => {
@@ -126,6 +126,11 @@ const NewForm = () => {
         error.response?.data || error.message
       );
       alert("Failed to save form.");
+    } finally {
+      setFormTitle("");
+      setFormDescription("");
+      setFields([]);
+      navigate("/forms");
     }
   };
 
@@ -218,93 +223,101 @@ const NewForm = () => {
         Save Form
       </button>
       {isPreviewOpen && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center"
-    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-  >
-    <div className="bg-[#f3e8ff] p-6 rounded-lg shadow-xl w-[95%] max-w-3xl max-h-[90vh] overflow-y-auto relative">
-      <button
-        className="absolute top-4 right-6 text-gray-500 hover:text-gray-700 text-5xl"
-        onClick={() => setIsPreviewOpen(false)}
-      >
-        &times;
-      </button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        >
+          <div className="bg-[#f3e8ff] p-6 rounded-lg shadow-xl w-[95%] max-w-3xl max-h-[90vh] overflow-y-auto relative">
+            <button
+              className="absolute top-4 right-6 text-gray-500 hover:text-gray-700 text-5xl"
+              onClick={() => setIsPreviewOpen(false)}
+            >
+              &times;
+            </button>
 
-      {/* Added Preview Title */}
-      <h2 className="text-3xl font-bold mb-4 pl-1">Preview</h2>
+            {/* Added Preview Title */}
+            <h2 className="text-3xl font-bold mb-4 pl-1">Preview</h2>
 
-      <div className="bg-white rounded-md shadow-md px-6 py-4">
-        <h1 className="text-2xl font-bold text-purple-900 mb-1">
-          {formTitle || "Untitled Form"}
-        </h1>
-        <p className="text-sm text-gray-600 mb-4">
-          {formDescription || "Form description goes here"}
-        </p>
-        <p className="text-red-600 text-sm mb-4 font-medium">* Required</p>
-      </div>
-
-      <div className="mt-4 space-y-6">
-        {fields.map((field, index) => (
-          <div key={index} className="bg-white rounded-md shadow-md p-6">
-            <label className="block text-md font-medium text-gray-800 mb-1">
-              {field.label}{" "}
-              {field.required && <span className="text-red-600">*</span>}
-            </label>
-
-            {field.description && (
-              <p className="text-sm text-gray-500 mb-2">
-                {field.description}
+            <div className="bg-white rounded-md shadow-md px-6 py-4">
+              <h1 className="text-2xl font-bold text-purple-900 mb-1">
+                {formTitle || "Untitled Form"}
+              </h1>
+              <p className="text-sm text-gray-600 mb-4">
+                {formDescription || "Form description goes here"}
               </p>
-            )}
+              <p className="text-red-600 text-sm mb-4 font-medium">
+                * Required
+              </p>
+            </div>
 
-            {field.type === "text" && (
-              <input
-                type="text"
-                placeholder="Your answer"
-                className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-600 py-1"
-                disabled
-              />
-            )}
-
-            {field.type === "radio" && (
-              <div className="space-y-2 mt-1">
-                {field.options.map((opt, idx) => (
-                  <label key={idx} className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      disabled
-                      className="accent-purple-600"
-                    />
-                    <span>{opt}</span>
+            <div className="mt-4 space-y-6">
+              {fields.map((field, index) => (
+                <div key={index} className="bg-white rounded-md shadow-md p-6">
+                  <label className="block text-md font-medium text-gray-800 mb-1">
+                    {field.label}{" "}
+                    {field.required && <span className="text-red-600">*</span>}
                   </label>
-                ))}
-              </div>
-            )}
 
-            {field.type === "checkbox" && (
-              <div className="space-y-2 mt-1">
-                {field.options.map((opt, idx) => (
-                  <label key={idx} className="flex items-center space-x-2">
+                  {field.description && (
+                    <p className="text-sm text-gray-500 mb-2">
+                      {field.description}
+                    </p>
+                  )}
+
+                  {field.type === "text" && (
                     <input
-                      type="checkbox"
+                      type="text"
+                      placeholder="Your answer"
+                      className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-600 py-1"
                       disabled
-                      className="accent-purple-600"
                     />
-                    <span>{opt}</span>
-                  </label>
-                ))}
-              </div>
-            )}
+                  )}
+
+                  {field.type === "radio" && (
+                    <div className="space-y-2 mt-1">
+                      {field.options.map((opt, idx) => (
+                        <label
+                          key={idx}
+                          className="flex items-center space-x-2"
+                        >
+                          <input
+                            type="radio"
+                            disabled
+                            className="accent-purple-600"
+                          />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+
+                  {field.type === "checkbox" && (
+                    <div className="space-y-2 mt-1">
+                      {field.options.map((opt, idx) => (
+                        <label
+                          key={idx}
+                          className="flex items-center space-x-2"
+                        >
+                          <input
+                            type="checkbox"
+                            disabled
+                            className="accent-purple-600"
+                          />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              <button className="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800">
+                Submit
+              </button>
+            </div>
           </div>
-        ))}
-
-        <button className="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800">
-          Submit
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
     </div>
   );
 };
