@@ -135,175 +135,182 @@ const NewForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-3xl font-bold mb-3">Create New Form</h2>
-        <button
-          onClick={() => setIsPreviewOpen(true)}
-          className="bg-gray-200 px-4 py-1 rounded hover:bg-gray-300"
-        >
-          Preview
-        </button>
-      </div>
-
-      <input
-        type="text"
-        placeholder="Form Title"
-        value={formTitle}
-        onChange={(e) => setFormTitle(e.target.value)}
-        className="w-full px-4 py-2 border rounded"
-        required
-      />
-
-      <textarea
-        placeholder="Form Description"
-        value={formDescription}
-        onChange={(e) => setFormDescription(e.target.value)}
-        className="w-full px-4 py-2 border rounded"
-      />
-
-      {/* Dropdown to add new field */}
-      <div>
-        <select
-          onChange={(e) => {
-            if (e.target.value) {
-              addField(e.target.value);
-              e.target.value = "";
-            }
-          }}
-          className="border px-4 py-2 rounded"
-        >
-          <option value="">➕ Add Question Type</option>
-          {fieldTypes.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Dynamic Field List */}
-      {fields.map((field) => (
-        <div
-          key={field.id}
-          className="bg-white border p-4 rounded shadow-sm relative space-y-3"
-        >
-          <input
-            type="text"
-            placeholder="Question Title"
-            value={field.label}
-            onChange={(e) => updateField(field.id, "label", e.target.value)}
-            className="w-full border-b pb-1 text-lg font-semibold"
-          />
-
-          {["radio", "checkbox"].includes(field.type) && (
-            <textarea
-              placeholder="Enter options (comma separated)"
-              onChange={(e) => updateOptions(field.id, e.target.value)}
-              defaultValue={field.options.join(", ")}
-              className="w-full border px-3 py-2 rounded"
-            />
-          )}
-
-          {renderField(field)}
-
+    <div className="min-h-[90vh] bg-gray-900 py-10 px-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-4xl font-bold text-purple-100">
+            Create New Form
+          </h2>
           <button
-            onClick={() => deleteField(field.id)}
-            className="absolute top-2 right-[-40px] text-red-500 hover:text-red-700 text-m cursor-pointer"
+            onClick={() => setIsPreviewOpen(true)}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
           >
-            ❌
+            Preview
           </button>
         </div>
-      ))}
 
-      <button
-        onClick={submitForm}
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-      >
-        Save Form
-      </button>
+        <div className="bg-white p-6 rounded-2xl shadow-md mb-6">
+          <input
+            type="text"
+            placeholder="Form Title"
+            value={formTitle}
+            onChange={(e) => setFormTitle(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg text-lg focus:outline-none focus:border-purple-500"
+            required
+          />
+
+          <textarea
+            placeholder="Form Description"
+            value={formDescription}
+            onChange={(e) => setFormDescription(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg mt-4 text-gray-700 focus:outline-none focus:border-purple-500"
+          />
+        </div>
+
+        {/* Dropdown to add new field */}
+        <div className="mb-6">
+          <select
+            onChange={(e) => {
+              if (e.target.value) {
+                addField(e.target.value);
+                e.target.value = "";
+              }
+            }}
+            className="w-[20%] px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:border-purple-500"
+          >
+            <option value="">➕ Add Question Type</option>
+            {fieldTypes.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Dynamic Field List */}
+        <div className="space-y-6">
+          {fields.map((field) => (
+            <div
+              key={field.id}
+              className="bg-white p-6 rounded-2xl shadow-md relative space-y-4 border border-purple-100 hover:border-purple-300 transition-all"
+            >
+              <input
+                type="text"
+                placeholder="Question Title"
+                value={field.label}
+                onChange={(e) => updateField(field.id, "label", e.target.value)}
+                className="w-full border-b border-gray-200 pb-2 text-lg font-semibold text-gray-800 focus:outline-none focus:border-purple-500"
+              />
+
+              {["radio", "checkbox"].includes(field.type) && (
+                <textarea
+                  placeholder="Enter options (comma separated)"
+                  onChange={(e) => updateOptions(field.id, e.target.value)}
+                  defaultValue={field.options.join(", ")}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:border-purple-500"
+                />
+              )}
+
+              {renderField(field)}
+
+              <button
+                onClick={() => deleteField(field.id)}
+                className="absolute top-4 right-4 cursor-pointer text-red-500 hover:text-red-700 transition-colors"
+              >
+                ❌
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 flex justify-end">
+          <button
+            onClick={submitForm}
+            className="bg-gradient-to-r from-blue-600 to-purple-500 text-white px-8 py-3 rounded-lg font-medium shadow-md hover:from-purple-700 hover:to-purple-600 transition"
+          >
+            Save Form
+          </button>
+        </div>
+      </div>
+
+      {/* Preview Modal */}
       {isPreviewOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         >
-          <div className="bg-[#f3e8ff] p-6 rounded-lg shadow-xl w-[95%] max-w-3xl max-h-[90vh] overflow-y-auto relative">
+          <div className="bg-white p-8 rounded-2xl shadow-xl w-[95%] max-w-3xl max-h-[90vh] overflow-y-auto relative">
             <button
-              className="absolute top-4 right-6 text-gray-500 hover:text-gray-700 text-5xl"
+              className="absolute top-5 right-6 text-gray-500 cursor-pointer hover:text-gray-700 text-5xl"
               onClick={() => setIsPreviewOpen(false)}
             >
               &times;
             </button>
 
-            {/* Added Preview Title */}
-            <h2 className="text-3xl font-bold mb-4 pl-1">Preview</h2>
+            <h2 className="text-3xl font-bold mb-6 text-purple-900">Preview</h2>
 
-            <div className="bg-white rounded-md shadow-md px-6 py-4">
-              <h1 className="text-2xl font-bold text-purple-900 mb-1">
+            <div className="bg-purple-50 rounded-lg p-6 mb-6">
+              <h1 className="text-2xl font-bold text-purple-900 mb-2">
                 {formTitle || "Untitled Form"}
               </h1>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-gray-600">
                 {formDescription || "Form description goes here"}
-              </p>
-              <p className="text-red-600 text-sm mb-4 font-medium">
-                * Required
               </p>
             </div>
 
-            <div className="mt-4 space-y-6">
+            <div className="space-y-6">
               {fields.map((field, index) => (
-                <div key={index} className="bg-white rounded-md shadow-md p-6">
-                  <label className="block text-md font-medium text-gray-800 mb-1">
-                    {field.label}{" "}
-                    {field.required && <span className="text-red-600">*</span>}
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-md p-6 border border-gray-100"
+                >
+                  <label className="block text-lg font-medium text-gray-800 mb-2">
+                    {field.label}
+                    {field.required && (
+                      <span className="text-red-600 ml-1">*</span>
+                    )}
                   </label>
-
-                  {field.description && (
-                    <p className="text-sm text-gray-500 mb-2">
-                      {field.description}
-                    </p>
-                  )}
 
                   {field.type === "text" && (
                     <input
                       type="text"
                       placeholder="Your answer"
-                      className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-600 py-1"
+                      className="w-full border-b border-gray-300 focus:outline-none focus:border-purple-600 py-2"
                       disabled
                     />
                   )}
 
                   {field.type === "radio" && (
-                    <div className="space-y-2 mt-1">
+                    <div className="space-y-2">
                       {field.options.map((opt, idx) => (
                         <label
                           key={idx}
-                          className="flex items-center space-x-2"
+                          className="flex items-center space-x-3"
                         >
                           <input
                             type="radio"
                             disabled
                             className="accent-purple-600"
                           />
-                          <span>{opt}</span>
+                          <span className="text-gray-700">{opt}</span>
                         </label>
                       ))}
                     </div>
                   )}
 
                   {field.type === "checkbox" && (
-                    <div className="space-y-2 mt-1">
+                    <div className="space-y-2">
                       {field.options.map((opt, idx) => (
                         <label
                           key={idx}
-                          className="flex items-center space-x-2"
+                          className="flex items-center space-x-3"
                         >
                           <input
                             type="checkbox"
                             disabled
                             className="accent-purple-600"
                           />
-                          <span>{opt}</span>
+                          <span className="text-gray-700">{opt}</span>
                         </label>
                       ))}
                     </div>
@@ -311,13 +318,33 @@ const NewForm = () => {
                 </div>
               ))}
 
-              <button className="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800">
+              <button className="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-8 py-3 rounded-lg font-medium shadow-md hover:from-purple-700 hover:to-purple-600 transition">
                 Submit
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Decorative SVGs */}
+      <svg
+        className="fixed bottom-[50%] left-0 w-full opacity-10 pointer-events-none"
+        viewBox="0 0 1440 320"
+      >
+        <path
+          fill="#6366f1"
+          d="M0,192L48,197.3C96,203,192,213,288,202.7C384,192,480,160,576,133.3C672,107,768,85,864,101.3C960,117,1056,171,1152,165.3C1248,160,1344,96,1392,64L1440,32V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0Z"
+        ></path>
+      </svg>
+      <svg
+        className="fixed top-[50%] left-0 w-full opacity-10 pointer-events-none"
+        viewBox="0 0 1440 320"
+      >
+        <path
+          fill="#6366f1"
+          d="M0,128L48,144C96,160,192,192,288,202.7C384,213,480,203,576,170.7C672,139,768,85,864,64C960,43,1056,53,1152,74.7C1248,96,1344,128,1392,144L1440,160V0H1392C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0H0Z"
+        ></path>
+      </svg>
     </div>
   );
 };

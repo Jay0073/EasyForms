@@ -42,3 +42,38 @@
 .read-the-docs {
   color: #888;
 } */
+
+html {
+  scroll-behavior: smooth;
+  background-color: oklch(0.987 0.026 102.212);
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE, Edge */
+body {
+  -ms-overflow-style: none;
+}
+
+.glass-card {
+  @apply backdrop-blur-sm bg-white/10 border border-white/30 p-6 rounded-xl shadow-lg text-white;
+}
