@@ -130,7 +130,7 @@ const NewForm = () => {
       setFormTitle("");
       setFormDescription("");
       setFields([]);
-      navigate("/forms");
+      navigate("/allforms");
     }
   };
 
