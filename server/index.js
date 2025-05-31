@@ -8,15 +8,22 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Replace with your frontend's URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-app.use(express.json()); // Parse JSON request bodies
+// CORS Configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+
+// Apply CORS middleware with options
+app.use(cors(corsOptions));
+
+// Parse JSON payloads
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to the database
 connectToDatabase();
